@@ -34,6 +34,10 @@ public class Main {
         }
     }
     
+    /*
+    Dit is een test
+    */
+    
     private static void leesSteden(String bestandsnaam) throws FileNotFoundException {
         beschikbareSteden = new ArrayList<>();
         Scanner sc = new Scanner(new File(bestandsnaam));
