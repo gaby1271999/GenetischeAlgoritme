@@ -5,7 +5,6 @@
  */
 package genetischealgoritmen;
 
-import java.util.Comparator;
 
 /**
  *
@@ -35,12 +34,17 @@ public class Gen {
     }
     
     public void veranderVolgnr(int waarde) {
-        this.volgnr += waarde;
+        /*this.volgnr += waarde;
         if (volgnr >= 140) {
             volgnr -= 2 * 140;
 
         } else if (volgnr <= -140) {
             volgnr += 2 * 140;
+        }*/
+        if (waarde > 0){
+            volgnr = ((volgnr + waarde) + 139) % 279 - 139; 
+        } else{
+            volgnr = ((volgnr + waarde) - 139) % 279 + 139; 
         }
     }
 
@@ -50,12 +54,4 @@ public class Gen {
     }
     
     
-}
-
-class SortGenByNumber implements Comparator<Gen> {
-
-    @Override
-    public int compare(Gen gen1, Gen gen2) {
-        return gen1.getVolgnr() - gen2.getVolgnr();
-    }
 }

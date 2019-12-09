@@ -31,6 +31,7 @@ public class Chromosoom {
         }
         waarde = 5 * (Main.beschikbareSteden.size() + 1);
         genen.add(new Gen(Main.beschikbareSteden.get(0), waarde));
+
         berekenEvaluatiewaarde();
     }
 
@@ -40,6 +41,7 @@ public class Chromosoom {
         berekenEvaluatiewaarde();
     }
 
+    /*
     public Chromosoom(List<Gen> linkerGenen, List<Gen> rechterGenen) {
         genen = new ArrayList();
         for (Gen g : linkerGenen) {
@@ -49,8 +51,7 @@ public class Chromosoom {
             genen.add(g);
         }
         berekenEvaluatiewaarde();
-    }
-
+    }*/
     public double getFitness() {
         return fitness;
     }
@@ -72,7 +73,7 @@ public class Chromosoom {
         List<Gen> kopie = new ArrayList(genen); // kopie nemen
         Collections.sort(kopie, new SortGenByNumber());
 
-        //copie.forEach((g) -> System.out.println(copie.indexOf(g) + ", " + g.getVolgnr()));
+        //kopie.forEach((g) -> System.out.println(kopie.indexOf(g) + ", " + g.getVolgnr()));
         //genen.forEach((g) -> System.out.println(genen.indexOf(g) + ", " + g.getVolgnr()));
         evaluatiewaarde = 0;
         for (int i = 0; i < kopie.size() - 1; i++) {
@@ -82,8 +83,8 @@ public class Chromosoom {
 
     public void mutatie() {
         int indexGen = Consts.r.nextInt(Consts.AANTAL_GENEN - 2) + 1;
-        //genen.get(indexGen).veranderVolgnr(Consts.r.nextInt(279) - 139);
 
+        // indien willekeurig:  genen.get(indexGen).veranderVolgnr(Consts.r.nextInt(279) - 139);
         genen.get(indexGen).veranderVolgnr((-2));
 
         berekenEvaluatiewaarde(); //moet opnieuw berekend worden
