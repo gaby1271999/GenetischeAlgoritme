@@ -14,9 +14,8 @@ import java.util.Random;
 public class Consts {
     public static Random r = new Random();
     public static int AANTAL_GENEN; //aantal genen per chromosoom
-    public static final double MUTATIEKANS = 50; //van 0 tot 100% 
-    public static final int AANTAL_CHROMOSOMEN = 1; //2500
-    public static final int AANTAL_ITTERATIES = 750;
+    public static final double MUTATIEKANS = 0; //van 0 tot 100% 
+    public static final int AANTAL_CHROMOSOMEN = 2500; //2500
     public static final int AANTAL_GENERATIES = 750;
     
 }
