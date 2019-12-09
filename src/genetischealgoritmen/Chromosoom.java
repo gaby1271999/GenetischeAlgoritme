@@ -57,17 +57,48 @@ public class Chromosoom {
         return genen;
     }
 
-    private void berekenEvaluatiewaarde() {
+        private void berekenEvaluatiewaarde() {
         //eerst sorteren 'genen'
-        List<Gen> copie = new ArrayList(genen); // kopie nemen
+        List<Gen> kopie = new ArrayList(genen); // kopie nemen
+        Collections.sort(kopie, new SortGenByNumber());
 
-        Collections.sort(copie, new SortGenByNumber());
-        copie.forEach((g) -> System.out.println(copie.indexOf(g) + ", " + g.getVolgnr()));
-        genen.forEach((g) -> System.out.println(genen.indexOf(g) + ", " + g.getVolgnr()));
-
-        for (int i = 0; i < copie.size() - 1; i++) {
-            evaluatiewaarde += copie.get(i).getStad().afstand(copie.get(i + 1).getStad());
+        //copie.forEach((g) -> System.out.println(copie.indexOf(g) + ", " + g.getVolgnr()));
+        //genen.forEach((g) -> System.out.println(genen.indexOf(g) + ", " + g.getVolgnr()));
+        evaluatiewaarde = 0;
+        for (int i = 0; i < kopie.size() - 1; i++) {
+            evaluatiewaarde += kopie.get(i).getStad().afstand(kopie.get(i + 1).getStad());
         }
+    }
+    
+    
+    public void mutatie() {
+        int indexGen = Consts.r.nextInt(Consts.AANTAL_GENEN - 2) + 1;
+        //genen.get(indexGen).veranderVolgnr(Consts.r.nextInt(279) - 139);
+
+        genen.get(indexGen).veranderVolgnr((-2));
+
+        berekenEvaluatiewaarde(); //moet opnieuw berekend worden
+
+    }
+
+    @Override
+    public String toString() {
+        List<Gen> kopie = new ArrayList(genen); // kopie nemen
+        Collections.sort(kopie, new SortGenByNumber());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[Chromosoom] afstand: ");
+        sb.append(evaluatiewaarde);
+        sb.append(" fitness: ");
+        sb.append(fitness);
+        sb.append("\t( ");
+        for (Gen g : kopie) {
+            sb.append(g.toString());
+            sb.append(" ");
+        }
+        sb.append(")");
+
+        return sb.toString();
     }
 
 }
