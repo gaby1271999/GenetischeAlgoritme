@@ -7,12 +7,12 @@ package genetischealgoritmen;
 
 /**
  *
- * @author arvhoeck
+ * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
  */
 public class Stad {
-    private String naam;
-    private int xCoord;
-    private int yCoord;
+    private final String naam;
+    private final int xCoord;
+    private final int yCoord;
     
     
     public Stad(int xCoord, int yCoord, String naam){

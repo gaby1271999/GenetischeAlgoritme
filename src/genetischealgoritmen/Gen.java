@@ -8,7 +8,7 @@ package genetischealgoritmen;
 
 /**
  *
- * @author arvhoeck
+ * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
  */
 public class Gen {
 
