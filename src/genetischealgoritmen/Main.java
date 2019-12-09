@@ -14,30 +14,35 @@ import java.util.Scanner;
 public class Main {
 
     protected static List<Stad> beschikbareSteden;
-    
+
     public static void main(String[] args) {
-        boolean correctBestand = false;
-        
-        while (!correctBestand) {
-            try {
-                Scanner sc = new Scanner(System.in);
-                
-                System.out.println("Geef bestandsnaam in (bv steden.txt): ");
-                String bestandsnaam = sc.next();
-                
-                leesSteden(bestandsnaam);
-                Populatie p = new Populatie(bestandsnaam);
-                correctBestand = true;
-            } catch (FileNotFoundException err) {
-                System.out.println("Fout. Geef nieuwe bestandnaam: ");
+
+        try {
+
+            Populatie p = new Populatie("steden.txt");
+            System.out.println("Een fitnesswaarde < 1 is beter t.o.v. het gemiddelde.");
+            System.out.println("De mutatiekans heeft een duidelijke invloed, consistent betere resultaten worden enkel behaald als deze (ongeveer) 0 is\n");
+
+            System.out.println("Eerste (willekeurige) generatie heeft als beste chromosoom:\n" + p.getBesteChromosoom() + "\n");
+
+            for (int i = 0; i < Consts.AANTAL_GENERATIES; i++) {
+                p.maakNieuweGeneratie();
+                //System.out.println("beste: " + p.getBesteChromosoom());
+
             }
+
+            Chromosoom beste = p.getBesteChromosoom();
+            System.out.println("\nHet beste chromosoom uit de eindpopulatie is:\n" + beste);
+
+        } catch (FileNotFoundException err) {
+            System.out.println("Fout. Geef nieuwe bestandnaam: ");
         }
+
     }
-    
+
     /*
     Dit is een test
-    */
-    
+     */
     private static void leesSteden(String bestandsnaam) throws FileNotFoundException {
         beschikbareSteden = new ArrayList<>();
         Scanner sc = new Scanner(new File(bestandsnaam));

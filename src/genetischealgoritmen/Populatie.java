@@ -29,8 +29,25 @@ public class Populatie {
 
         berekenGemiddeldeEvaluatiewaarde();
         berekenFitnesswaarden();
-        
-        berekenKinderen();
+
+        //berekenKinderen();
+    }
+
+    public void maakNieuweGeneratie() {
+        bepaalKinderen(bepaalOuders());
+
+    }
+
+    public Chromosoom getBesteChromosoom() {
+        double besteFitness = 0;
+        Chromosoom beste = null;
+        for (Chromosoom c : chromosomen) {
+            if (beste == null || c.getFitness() < besteFitness) {
+                beste = c;
+                besteFitness = c.getFitness();
+            }
+        }
+        return beste;
     }
 
     private List<Chromosoom> bepaalOuders() {
@@ -65,9 +82,9 @@ public class Populatie {
 
         for (int counter = 0; counter < chromosomen.size(); counter++) {
             while (!(som <= huidigePijl && som + roulettewiel.get(index) > huidigePijl)) {
-                index = (index + 1) % chromosomen.size();
                 som += roulettewiel.get(index);
                 som %= totaalGewichtsfactor;
+                index = (index + 1) % roulettewiel.size();
             }
 
             ouders.add(chromosomen.get(index));
@@ -77,7 +94,7 @@ public class Populatie {
 
         return ouders;
     }
-    
+
     private void berekenKinderen() {
         for (int i = 0; i < Consts.AANTAL_ITTERATIES; i++) {
             this.chromosomen = bepaalOuders();
@@ -85,38 +102,37 @@ public class Populatie {
             
             TODO
             Ik hou nu de orginele lijst nog en zelfs kinderen worden hergebruikt. 
-            */
+             */
             for (int y = 0; y < Consts.AANTAL_CHROMOSOMEN; y++) {
                 Chromosoom chrom1 = chromosomen.get(Consts.r.nextInt(chromosomen.size()));
                 chromosomen.remove(chrom1);
                 Chromosoom chrom2 = chromosomen.get(Consts.r.nextInt(chromosomen.size()));
                 chromosomen.remove(chrom2);
-                
+
                 Chromosoom kind = bepaalKinderen(chrom1, chrom2);
                 chromosomen.add(kind);
-                
+
                 chromosomen.add(Arrays.asList(chrom1, chrom2).get(Consts.r.nextInt(2)));
-                
+
                 //Eventuele toevoeging van mutatie.
                 controleerOpMutatie();
             }
         }
     }
-    
+
     private Chromosoom bepaalKinderen(Chromosoom chrom1, Chromosoom chrom2) {
         //Alles voor zonder de grens erbij en alles erna met grens erbij.
-        int scheidingsIndex = 2 + Consts.r.nextInt(chrom1.getGenen().size()-3);
-        
+        int scheidingsIndex = 2 + Consts.r.nextInt(chrom1.getGenen().size() - 3);
+
         Chromosoom child1, child2;
-        
+
         List<Gen> gen1 = new ArrayList<>();
         gen1.add(chrom1.getGenen().get(0));
         gen1.add(chrom1.getGenen().get(1));
         List<Gen> gen2 = new ArrayList<>();
         gen2.add(chrom2.getGenen().get(0));
         gen2.add(chrom2.getGenen().get(1));
-        
-        
+
         /*
         TODO
         
@@ -126,7 +142,7 @@ public class Populatie {
         Ik heb gekozen om van index 0 tem 1 en van index n-2 tot n-1 met n als grootte van de list niet 
         erbij te nemen omdat het geen nut heeft om die erbij te nemen omdat je exact dezelfde kinderen krijgt
         als de ouders.
-        */
+         */
         for (int i = 2; i < chrom1.getGenen().size(); i++) {
             if (i < scheidingsIndex) {
                 gen1.add(chrom1.getGenen().get(i));
@@ -136,30 +152,81 @@ public class Populatie {
                 gen2.add(chrom1.getGenen().get(i));
             }
         }
-                
+
         Chromosoom c1 = new Chromosoom(gen1);
         Chromosoom c2 = new Chromosoom(gen2);
-        
+
         return Arrays.asList(c1, c2).get(Consts.r.nextInt(2));
     }
-    
+
     private void controleerOpMutatie() {
         int kans = Consts.r.nextInt(101);
-        
+
         if (kans <= Consts.MUTATIEKANS) {
             Chromosoom chrom = chromosomen.get(Consts.r.nextInt(chromosomen.size()));
-            
+
             Gen gen = chrom.getGenen().get(Consts.r.nextInt(chrom.getGenen().size()));
-            
+
             /*
             TODO
             
             In de uitleg staat vermeerderen of verminderen maar ik denk dat we miss een check moeten uitvoeren om
             ervoor te zorgen dat we niet uit de boundries geraken.
-            */
-            int randomWaarde = Consts.r.nextInt() % (Main.beschikbareSteden.size()+1);
+             */
+            int randomWaarde = Consts.r.nextInt() % (Main.beschikbareSteden.size() + 1);
             gen.setVolgnr(gen.getVolgnr() + randomWaarde);
         }
+    }
+
+    private void bepaalKinderen(List<Chromosoom> ouders) {
+        List<Chromosoom> kinderen = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
+        for (int k = 0; k < Consts.AANTAL_CHROMOSOMEN; k++) {
+            int o1 = Consts.r.nextInt(ouders.size());
+            int o2 = Consts.r.nextInt(ouders.size());
+            while (o2 == o1) {
+                o2 = Consts.r.nextInt(ouders.size());
+            }
+            //kans dat getallen gelijk zijn zeer klein. Zekerheid dat ouders uniek zijn.
+            Chromosoom ouder1 = ouders.get(o1);
+            Chromosoom ouder2 = ouders.get(o2);
+            int scheidingsLijn = Consts.r.nextInt((Consts.AANTAL_GENEN - 3)) + 1;
+            //scheidingslijn geeft rechtergrens aan. vb: scheidingslijn = 1 => enkel 2e element wordt overgeërfd.
+            Chromosoom kind1, kind2;
+            //2e constructor van chromosoom vraagt linker- en rechtergenen. 
+            //Ouder wordt gesplitst in 2 delen.
+            List<Gen> links1 = new ArrayList<>();
+            List<Gen> links2 = new ArrayList<>();
+            List<Gen> rechts1 = new ArrayList<>();
+            List<Gen> rechts2 = new ArrayList<>();
+
+            for (int i = 0; i < Consts.AANTAL_GENEN; i++) {
+                if (i <= scheidingsLijn) {
+                    links1.add(ouder1.getGenen().get(i));
+                    links2.add(ouder2.getGenen().get(i));
+                } else {
+                    rechts1.add(ouder1.getGenen().get(i));
+                    rechts2.add(ouder2.getGenen().get(i));
+                }
+            }
+            kind1 = new Chromosoom(links1, rechts2);
+            kind2 = new Chromosoom(links2, rechts1);
+            Chromosoom kind;
+            if (Consts.r.nextBoolean()) {
+                kind = kind1;
+            } else {
+                kind = kind2;
+            }
+            //mutatie
+            if (Consts.r.nextDouble() < Consts.MUTATIEKANS) {
+                kind.mutatie();
+            }
+
+            kinderen.add(kind);
+        }
+
+        chromosomen = kinderen;
+        berekenGemiddeldeEvaluatiewaarde();
+        berekenFitnesswaarden();
     }
 
     private void berekenGemiddeldeEvaluatiewaarde() {

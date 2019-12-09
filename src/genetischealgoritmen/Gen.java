@@ -33,6 +33,23 @@ public class Gen {
     public void setVolgnr(int volgnr) {
         this.volgnr = volgnr;
     }
+    
+    public void veranderVolgnr(int waarde) {
+        this.volgnr += waarde;
+        if (volgnr >= 140) {
+            volgnr -= 2 * 140;
+
+        } else if (volgnr <= -140) {
+            volgnr += 2 * 140;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return stad.getNaam();
+    }
+    
+    
 }
 
 class SortGenByNumber implements Comparator<Gen> {

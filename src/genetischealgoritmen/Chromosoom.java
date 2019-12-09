@@ -33,11 +33,21 @@ public class Chromosoom {
         genen.add(new Gen(Main.beschikbareSteden.get(0), waarde));
         berekenEvaluatiewaarde();
     }
-    
-    
+
     public Chromosoom(List<Gen> genen) {
         this.genen = genen;
-        
+
+        berekenEvaluatiewaarde();
+    }
+
+    public Chromosoom(List<Gen> linkerGenen, List<Gen> rechterGenen) {
+        genen = new ArrayList();
+        for (Gen g : linkerGenen) {
+            genen.add(g);
+        }
+        for (Gen g : rechterGenen) {
+            genen.add(g);
+        }
         berekenEvaluatiewaarde();
     }
 
@@ -57,7 +67,7 @@ public class Chromosoom {
         return genen;
     }
 
-        private void berekenEvaluatiewaarde() {
+    private void berekenEvaluatiewaarde() {
         //eerst sorteren 'genen'
         List<Gen> kopie = new ArrayList(genen); // kopie nemen
         Collections.sort(kopie, new SortGenByNumber());
@@ -69,8 +79,7 @@ public class Chromosoom {
             evaluatiewaarde += kopie.get(i).getStad().afstand(kopie.get(i + 1).getStad());
         }
     }
-    
-    
+
     public void mutatie() {
         int indexGen = Consts.r.nextInt(Consts.AANTAL_GENEN - 2) + 1;
         //genen.get(indexGen).veranderVolgnr(Consts.r.nextInt(279) - 139);

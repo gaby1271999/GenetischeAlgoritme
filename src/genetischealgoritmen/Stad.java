@@ -25,4 +25,8 @@ public class Stad {
         return Math.sqrt((stad.xCoord - xCoord)*(stad.xCoord - xCoord) + (stad.yCoord - yCoord)*(stad.yCoord - yCoord));
     }
     
+    public String getNaam() {
+        return naam;
+    }
+    
 }

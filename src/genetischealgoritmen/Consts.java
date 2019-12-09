@@ -17,5 +17,6 @@ public class Consts {
     public static final double MUTATIEKANS = 50; //van 0 tot 100% 
     public static final int AANTAL_CHROMOSOMEN = 1; //2500
     public static final int AANTAL_ITTERATIES = 750;
+    public static final int AANTAL_GENERATIES = 750;
     
 }
