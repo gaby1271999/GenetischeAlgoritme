@@ -9,7 +9,7 @@ import java.util.Comparator;
 
 /**
  *
- * @author aaron
+ * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
  */
 class SortGenByNumber implements Comparator<Gen> {
 

@@ -30,7 +30,7 @@ public class Main {
             
             for (int i = 0; i < Consts.AANTAL_GENERATIES; i++) {
                 p.maakNieuweGeneratie();
-                System.out.println("beste: " + p.getBesteChromosoom());
+                //System.out.println("beste: " + p.getBesteChromosoom());
             }
 
             Chromosoom beste = p.getBesteChromosoom();
@@ -42,9 +42,7 @@ public class Main {
 
     }
 
-    /*
-    Dit is een test
-     */
+
     private static void leesSteden(String bestandsnaam) throws FileNotFoundException {
         beschikbareSteden = new ArrayList<>();
         Scanner sc = new Scanner(new File(bestandsnaam));

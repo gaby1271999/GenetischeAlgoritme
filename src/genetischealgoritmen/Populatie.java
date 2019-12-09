@@ -12,11 +12,11 @@ import java.util.List;
 
 /**
  *
- * @author arvhoeck
+ * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
  */
 public class Populatie {
 
-    public static List<Chromosoom> chromosomen;  //nog te bekijken welke collectie?
+    private List<Chromosoom> chromosomen;  //nog te bekijken welke collectie?
     private double gemiddeldeEvaluatiewaarde;
 
     public Populatie() {
@@ -62,7 +62,7 @@ public class Populatie {
         double gewichtsfactorFirst = 1;
         double totaalGewichtsfactor = 0;
 
-        List<Double> roulettewiel = new ArrayList<>();
+        List<Double> roulettewiel = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
 
         for (Chromosoom chromosoom : chromosomen) {
             double gewichtsfactor = gewichtsfactorFirst * fitnessWaardeFirst / chromosoom.getFitness();
@@ -73,7 +73,7 @@ public class Populatie {
 
         double eerstePijl = Consts.r.nextDouble() * totaalGewichtsfactor;
         double deltaInterval = totaalGewichtsfactor / chromosomen.size();
-        List<Chromosoom> ouders = new ArrayList<>();
+        List<Chromosoom> ouders = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
 
         double huidigePijl = eerstePijl;
         int index = 0;
@@ -94,7 +94,74 @@ public class Populatie {
         return ouders;
     }
 
-//    private void berekenKinderen() {
+    private void bepaalKinderen(List<Chromosoom> ouders) {
+        List<Chromosoom> kinderen = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
+        for (int k = 0; k < Consts.AANTAL_CHROMOSOMEN; k++) {
+            Chromosoom ouder1 = ouders.get(Consts.r.nextInt(ouders.size()));
+            ouders.remove(ouder1);
+            Chromosoom ouder2 = ouders.get(Consts.r.nextInt(ouders.size()));
+            ouders.add(ouder1);
+            
+            //kans dat getallen gelijk zijn zeer klein. Zekerheid dat ouders uniek zijn.
+            //Chromosoom ouder1 = ouders.get(o1);
+            //Chromosoom ouder2 = ouders.get(o2);
+            int scheidingsLijn = Consts.r.nextInt((Consts.AANTAL_GENEN - 3)) + 1;
+            //scheidingslijn geeft rechtergrens aan. vb: scheidingslijn = 1 => enkel 2e element wordt overgeërfd.
+            Chromosoom kind1, kind2;
+           
+            
+            List<Gen> gen1 = new ArrayList<>(Consts.AANTAL_GENEN);
+            List<Gen> gen2 = new ArrayList<>(Consts.AANTAL_GENEN);
+
+
+            for (int i = 0; i < Consts.AANTAL_GENEN; i++) {
+                if (i <= scheidingsLijn) {
+                    gen1.add(ouder1.getGenen().get(i));
+                    gen2.add(ouder2.getGenen().get(i));
+                } else {
+                    gen1.add(ouder2.getGenen().get(i));
+                    gen2.add(ouder1.getGenen().get(i));
+                }
+            }
+            kind1 = new Chromosoom(gen1);
+            kind2 = new Chromosoom(gen2);
+            
+            Chromosoom kind;
+            
+            if (Consts.r.nextBoolean()) {
+                kind = kind1;
+            } else {
+                kind = kind2;
+            }
+            
+            //mutatie
+            if (Consts.r.nextDouble() < Consts.MUTATIEKANS) {
+                kind.mutatie();
+            }
+
+            kinderen.add(kind);
+        }
+
+        chromosomen = kinderen;
+        berekenGemiddeldeEvaluatiewaarde();
+        berekenFitnesswaarden();
+    }
+
+    private void berekenGemiddeldeEvaluatiewaarde() {
+        double som = 0;
+        for (Chromosoom c : chromosomen) {
+            som += c.getEvaluatiewaarde();
+        }
+        gemiddeldeEvaluatiewaarde = som / chromosomen.size();
+    }
+
+    private void berekenFitnesswaarden() {
+        for (Chromosoom chromosoom : chromosomen) {
+            chromosoom.setFitness(gemiddeldeEvaluatiewaarde);
+        }
+    }
+    
+    //    private void berekenKinderen() {
 //        for (int i = 0; i < Consts.AANTAL_ITTERATIES; i++) {
 //            this.chromosomen = bepaalOuders();
 //            /*
@@ -174,71 +241,8 @@ public class Populatie {
             gen.setVolgnr(gen.getVolgnr() + randomWaarde);
         }
     }*/
-
-    private void bepaalKinderen(List<Chromosoom> ouders) {
-        List<Chromosoom> kinderen = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
-        for (int k = 0; k < Consts.AANTAL_CHROMOSOMEN; k++) {
-            Chromosoom ouder1 = ouders.get(Consts.r.nextInt(ouders.size()));
-            ouders.remove(ouder1);
-            Chromosoom ouder2 = ouders.get(Consts.r.nextInt(ouders.size()));
-            ouders.add(ouder1);
-            
-            //kans dat getallen gelijk zijn zeer klein. Zekerheid dat ouders uniek zijn.
-            //Chromosoom ouder1 = ouders.get(o1);
-            //Chromosoom ouder2 = ouders.get(o2);
-            int scheidingsLijn = Consts.r.nextInt((Consts.AANTAL_GENEN - 3)) + 1;
-            //scheidingslijn geeft rechtergrens aan. vb: scheidingslijn = 1 => enkel 2e element wordt overgeërfd.
-            Chromosoom kind1, kind2;
-           
-            
-            List<Gen> gen1 = new ArrayList<>();
-            List<Gen> gen2 = new ArrayList<>();
-
-
-            for (int i = 0; i < Consts.AANTAL_GENEN; i++) {
-                if (i <= scheidingsLijn) {
-                    gen1.add(ouder1.getGenen().get(i));
-                    gen2.add(ouder2.getGenen().get(i));
-                } else {
-                    gen1.add(ouder1.getGenen().get(i));
-                    gen2.add(ouder2.getGenen().get(i));
-                }
-            }
-            kind1 = new Chromosoom(gen1);
-            kind2 = new Chromosoom(gen2);
-            
-            Chromosoom kind;
-            
-            if (Consts.r.nextBoolean()) {
-                kind = kind1;
-            } else {
-                kind = kind2;
-            }
-            
-            //mutatie
-            if (Consts.r.nextDouble() < Consts.MUTATIEKANS) {
-                kind.mutatie();
-            }
-
-            kinderen.add(kind);
-        }
-
-        chromosomen = kinderen;
-        berekenGemiddeldeEvaluatiewaarde();
-        berekenFitnesswaarden();
-    }
-
-    private void berekenGemiddeldeEvaluatiewaarde() {
-        double som = 0;
-        for (Chromosoom c : chromosomen) {
-            som += c.getEvaluatiewaarde();
-        }
-        gemiddeldeEvaluatiewaarde = som / chromosomen.size();
-    }
-
-    private void berekenFitnesswaarden() {
-        for (Chromosoom chromosoom : chromosomen) {
-            chromosoom.setFitness(gemiddeldeEvaluatiewaarde);
-        }
-    }
+    
+    
+    
+    
 }

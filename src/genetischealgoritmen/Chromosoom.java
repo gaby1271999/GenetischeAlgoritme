@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  *
- * @author arvhoeck
+ * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
  */
 public class Chromosoom {
 
@@ -21,7 +21,7 @@ public class Chromosoom {
     private double evaluatiewaarde;    //totaal afgelegde afstand
 
     public Chromosoom() {
-        genen = new ArrayList<>();
+        genen = new ArrayList<>(Consts.AANTAL_GENEN);
         //willekeurige bepaling volgnr
         int waarde = -5 * (Main.beschikbareSteden.size() + 1);
         genen.add(new Gen(Main.beschikbareSteden.get(0), waarde));
@@ -41,17 +41,7 @@ public class Chromosoom {
         berekenEvaluatiewaarde();
     }
 
-    /*
-    public Chromosoom(List<Gen> linkerGenen, List<Gen> rechterGenen) {
-        genen = new ArrayList();
-        for (Gen g : linkerGenen) {
-            genen.add(g);
-        }
-        for (Gen g : rechterGenen) {
-            genen.add(g);
-        }
-        berekenEvaluatiewaarde();
-    }*/
+
     public double getFitness() {
         return fitness;
     }
