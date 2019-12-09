@@ -5,7 +5,6 @@
  */
 package genetischealgoritmen;
 
-import java.util.Comparator;
 
 /**
  *
