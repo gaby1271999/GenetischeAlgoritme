@@ -1,15 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package genetischealgoritmen;
 
 import java.util.Comparator;
 
-/**
- *
- * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
+/** 
+ * Sorteert een arraylist met Genen volgens volgnummer
+ * 
+ * @author Aäron Vanhoecke, Felix Capon en Gabriel D'Hondt
+ * @version 1.0
+ * @since 1.0
  */
 class SortGenByNumber implements Comparator<Gen> {
 
