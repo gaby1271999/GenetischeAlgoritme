@@ -1,62 +1,71 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package genetischealgoritmen;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
- *
- * @author Felix Capon, Gabriel D'Hondt, Aäron Vanhoecke
+ * De Populatie object houdt een lijst van mogelijke chromosomen bij,
+ * hierin zal ook de meest toepasselijke Chromosoom bepaald worden.
+ * 
+ * @author Aäron Vanhoecke, Felix Capon en Gabriel D'Hondt
+ * @version 1.0
+ * @since 1.0
  */
 public class Populatie {
 
-    private List<Chromosoom> chromosomen;  //nog te bekijken welke collectie?
+    private List<Chromosoom> chromosomen;
     private double gemiddeldeEvaluatiewaarde;
 
+    /**
+     * Maakt een Populatie object aan aan de hand van de ingeleze lijst van steden.
+     */
     public Populatie() {
-        //initialisatie: willekeurig
-        //leesSteden(bestandsnaam); AL GEDAAN IN MAIN class
         chromosomen = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
+        
         for (int i = 0; i < Consts.AANTAL_CHROMOSOMEN; i++) {
             chromosomen.add(new Chromosoom());
         }
 
         berekenGemiddeldeEvaluatiewaarde();
+        
         berekenFitnesswaarden();
-
     }
 
+    /**
+     * Maakt een nieuwe generatie aan uit de bepaalde ouders
+     */
     public void maakNieuweGeneratie() {
         bepaalKinderen(bepaalOuders());
-
     }
 
+    /**
+     * @return het beste chromosoom met de kortste totale afstand
+     */
     public Chromosoom getBesteChromosoom() {
         double besteFitness = 0;
         Chromosoom beste = null;
+        
         for (Chromosoom c : chromosomen) {
             if (beste == null || c.getFitness() < besteFitness) {
                 beste = c;
                 besteFitness = c.getFitness();
             }
         }
+        
         return beste;
     }
 
+    /**
+     * @return een lijst met Chromosomen genaamd ouders 
+     * die bepaald wordt aan de hand van de fitnesswaarde van de Chromosomen
+     */
     private List<Chromosoom> bepaalOuders() {
-        /*een list even groot als chromosomenlist.
-        Op de overeenkomstige index bewaren we de gewichtsfactor.
-        Gewichtsfactor berekening:
-        eerste element waarde 100 geven. Vervolgens verhouding tov volgende elementen berekenen.
-        Som van alle gewichtsfactoren is lengte van denkbeeldige rij.
-        Rijgrootte delen door aantal chromosomen.
-         */
+//        een list even groot als chromosomenlist.
+//        Op de overeenkomstige index bewaren we de gewichtsfactor.
+//        Gewichtsfactor berekening:
+//        eerste element waarde 100 geven. Vervolgens verhouding tov volgende elementen berekenen.
+//        Som van alle gewichtsfactoren is lengte van denkbeeldige rij.
+//        Rijgrootte delen door aantal chromosomen.
 
         double fitnessWaardeFirst = chromosomen.get(0).getFitness();
         double gewichtsfactorFirst = 1;
@@ -83,10 +92,12 @@ public class Populatie {
             while (!(som <= huidigePijl && som + roulettewiel.get(index) > huidigePijl)) {
                 som += roulettewiel.get(index);
                 som %= totaalGewichtsfactor;
+                
                 index = (index + 1) % roulettewiel.size();
             }
 
             ouders.add(chromosomen.get(index));
+            
             huidigePijl += deltaInterval;
             huidigePijl %= totaalGewichtsfactor;
         }
@@ -94,25 +105,28 @@ public class Populatie {
         return ouders;
     }
 
+    /**
+     * We gaan over de chromosomen heen en maken kinderen van 2 random Chromosomen.
+     * Daarna gaan we ook op mutatie kijken en maken we een lijst met de afstammelingen van de ouders
+     * en de mutaties.
+     * 
+     * @param ouders 
+     */
     private void bepaalKinderen(List<Chromosoom> ouders) {
         List<Chromosoom> kinderen = new ArrayList<>(Consts.AANTAL_CHROMOSOMEN);
+        
         for (int k = 0; k < Consts.AANTAL_CHROMOSOMEN; k++) {
             Chromosoom ouder1 = ouders.get(Consts.r.nextInt(ouders.size()));
             ouders.remove(ouder1);
             Chromosoom ouder2 = ouders.get(Consts.r.nextInt(ouders.size()));
             ouders.add(ouder1);
             
-            //kans dat getallen gelijk zijn zeer klein. Zekerheid dat ouders uniek zijn.
-            //Chromosoom ouder1 = ouders.get(o1);
-            //Chromosoom ouder2 = ouders.get(o2);
             int scheidingsLijn = Consts.r.nextInt((Consts.AANTAL_GENEN - 3)) + 1;
-            //scheidingslijn geeft rechtergrens aan. vb: scheidingslijn = 1 => enkel 2e element wordt overgeërfd.
+            
             Chromosoom kind1, kind2;
-           
             
             List<Gen> gen1 = new ArrayList<>(Consts.AANTAL_GENEN);
             List<Gen> gen2 = new ArrayList<>(Consts.AANTAL_GENEN);
-
 
             for (int i = 0; i < Consts.AANTAL_GENEN; i++) {
                 if (i <= scheidingsLijn) {
@@ -144,25 +158,40 @@ public class Populatie {
         }
 
         chromosomen = kinderen;
+        
         berekenGemiddeldeEvaluatiewaarde();
         berekenFitnesswaarden();
     }
 
+    /**
+     * Berekend de gemiddelde evaluatiewaarde van het Populatie object
+     */
     private void berekenGemiddeldeEvaluatiewaarde() {
         double som = 0;
+        
         for (Chromosoom c : chromosomen) {
             som += c.getEvaluatiewaarde();
         }
+        
         gemiddeldeEvaluatiewaarde = som / chromosomen.size();
     }
 
+    /**
+     * Geeft de actie om de fitnesswaarden te berekenen van elke Chromosoom
+     */
     private void berekenFitnesswaarden() {
         for (Chromosoom chromosoom : chromosomen) {
             chromosoom.setFitness(gemiddeldeEvaluatiewaarde);
         }
     }
-    
-    //    private void berekenKinderen() {
+}
+
+
+/*
+    Oude code die we niet hebben toegepast
+*/
+
+//   private void berekenKinderen() {
 //        for (int i = 0; i < Consts.AANTAL_ITTERATIES; i++) {
 //            this.chromosomen = bepaalOuders();
 //            /*
@@ -209,7 +238,7 @@ public class Populatie {
 //        Ik heb gekozen om van index 0 tem 1 en van index n-2 tot n-1 met n als grootte van de list niet 
 //        erbij te nemen omdat het geen nut heeft om die erbij te nemen omdat je exact dezelfde kinderen krijgt
 //        als de ouders.
-//         */
+//        */
 //        for (int i = 2; i < chrom1.getGenen().size(); i++) {
 //            if (i < scheidingsIndex) {
 //                gen1.add(chrom1.getGenen().get(i));
@@ -225,25 +254,20 @@ public class Populatie {
 //
 //        return Arrays.asList(c1, c2).get(Consts.r.nextInt(2));
 //    }
-
-    /*private void controleerOpMutatie() {
-        int kans = Consts.r.nextInt(101);
-
-        if (kans <= Consts.MUTATIEKANS) {
-            Chromosoom chrom = chromosomen.get(Consts.r.nextInt(chromosomen.size()));
-
-            Gen gen = chrom.getGenen().get(Consts.r.nextInt(chrom.getGenen().size()));
-
-
-            //In de uitleg staat vermeerderen of verminderen maar ik denk dat we miss een check moeten uitvoeren om
-            //ervoor te zorgen dat we niet uit de boundries geraken.
-             
-            int randomWaarde = Consts.r.nextInt() % (Main.beschikbareSteden.size() + 1);
-            gen.setVolgnr(gen.getVolgnr() + randomWaarde);
-        }
-    }*/
-    
-    
-    
-    
-}
+//
+//    private void controleerOpMutatie() {
+//        int kans = Consts.r.nextInt(101);
+//
+//        if (kans <= Consts.MUTATIEKANS) {
+//            Chromosoom chrom = chromosomen.get(Consts.r.nextInt(chromosomen.size()));
+//
+//            Gen gen = chrom.getGenen().get(Consts.r.nextInt(chrom.getGenen().size()));
+//
+//
+//            //In de uitleg staat vermeerderen of verminderen maar ik denk dat we miss een check moeten uitvoeren om
+//            //ervoor te zorgen dat we niet uit de boundries geraken.
+//             
+//            int randomWaarde = Consts.r.nextInt() % (Main.beschikbareSteden.size() + 1);
+//            gen.setVolgnr(gen.getVolgnr() + randomWaarde);
+//        }
+//    }
