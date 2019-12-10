@@ -116,13 +116,14 @@ public class Populatie {
 
             for (int i = 0; i < Consts.AANTAL_GENEN; i++) {
                 if (i <= scheidingsLijn) {
-                    gen1.add(ouder1.getGenen().get(i));
-                    gen2.add(ouder2.getGenen().get(i));
+                    gen1.add(new Gen(ouder1.getGenen().get(i)));
+                    gen2.add(new Gen(ouder2.getGenen().get(i)));
                 } else {
-                    gen1.add(ouder2.getGenen().get(i));
-                    gen2.add(ouder1.getGenen().get(i));
+                    gen1.add(new Gen(ouder2.getGenen().get(i)));
+                    gen2.add(new Gen(ouder1.getGenen().get(i)));
                 }
             }
+            
             kind1 = new Chromosoom(gen1);
             kind2 = new Chromosoom(gen2);
             
