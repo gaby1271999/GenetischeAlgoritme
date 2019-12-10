@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Is een chromosoom en houd een mogelijke volgorde van de
- * steden bij.
+ * steden bij
  * 
  * @author Aäron Vanhoecke, Felix Capon en Gabriel D'Hondt
  * @version 1.0

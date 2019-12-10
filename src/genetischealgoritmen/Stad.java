@@ -8,6 +8,7 @@ package genetischealgoritmen;
  * @since 1.0
  */
 public class Stad {
+    
     private final String naam;
     private final int xCoord;
     private final int yCoord;
