@@ -33,10 +33,8 @@ public class Main {
             System.out.println("Een fitnesswaarde < 1 is beter t.o.v. het gemiddelde.\n");
             System.out.println("Eerste (willekeurige) generatie heeft als beste chromosoom:\n" + p.getBesteChromosoom() + "\n");
             
-            System.out.print("test/r");
             for (int i = 0; i < Consts.AANTAL_GENERATIES; i++) {
                 p.maakNieuweGeneratie();
-                System.out.print("test\r");
             }
 
             Chromosoom beste = p.getBesteChromosoom();
