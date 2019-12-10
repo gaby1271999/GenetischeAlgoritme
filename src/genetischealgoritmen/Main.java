@@ -22,8 +22,8 @@ public class Main {
             leesSteden("steden.txt");
             Populatie p = new Populatie();
             
-            System.out.println("Een fitnesswaarde < 1 is beter t.o.v. het gemiddelde.");
-            System.out.println("De mutatiekans heeft een duidelijke invloed, consistent betere resultaten worden enkel behaald als deze (ongeveer) 0 is\n");
+            System.out.println("Een fitnesswaarde < 1 is beter t.o.v. het gemiddelde.\n");
+
 
             System.out.println("Eerste (willekeurige) generatie heeft als beste chromosoom:\n" + p.getBesteChromosoom() + "\n");
            
