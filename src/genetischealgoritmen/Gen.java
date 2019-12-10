@@ -20,6 +20,11 @@ public class Gen {
         this.volgnr = volgnr;
 
     }
+    
+     public Gen(Gen gen){
+        this.stad = gen.stad; //er wordt nooit iets veranderd aan een stad, dus dit mag een referentie zijn
+        this.volgnr = gen.volgnr;
+    }
 
     public Stad getStad() {
         return stad;
